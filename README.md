@@ -47,3 +47,31 @@ This repository contains a simple FastAPI application for managing an inventory 
 ## Requirements
 
 - Once all tasks are completed, open a Pull Request (PR) with your changes.
+
+## Solutions:
+
+1. Run below commands to run application:
+
+```bash
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+2. Check Output using below urls:
+
+```bash
+curl -X POST "http://54.166.15.182:8000/items/" -H "Content-Type: application/json" -d '{"name": "item1", "price": 10.0, "quantity": 5, "description": "A test item"}'
+curl -X GET "http://54.166.15.182:8000/items/item1"
+
+```
+
+3. Access metrics API:
+
+   http://<PublicIP>:8000/metrics
+   
+4. Access prometheous:
+
+    http://<PublicIP>:9090/
+
+5. Access Alert Manager:
+     http://<PublicIP>:9093/
