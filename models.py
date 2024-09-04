@@ -1,6 +1,8 @@
+from pydantic import BaseModel
 from typing import Optional
-from main import BaseApiModel
 
+class BaseApiModel(BaseModel):
+    name: str
 
 class Item(BaseApiModel):
     price: Optional[float] = None

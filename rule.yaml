@@ -1,0 +1,21 @@
+groups:
+  - name: inventory_alerts
+    rules:
+      - alert: ItemQuantityLow
+        expr: product_quantity{product_name=~".+"} < 3
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Item quantity is low for {{ $labels.product_name }}"
+          description: "The quantity of item {{ $labels.product_name }} is below 3."
+
+      - alert: SuddenDropInQuantity
+        expr: (rate(product_quantity[5m]) < -5) and (product_quantity > 7)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sudden drop in item quantity for {{ $labels.product_name }}"
+          description: "The quantity of item {{ $labels.product_name }} dropped significantly."
+

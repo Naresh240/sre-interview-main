@@ -14,8 +14,18 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rule.yaml:/etc/prometheus/rules/rule.yaml
     networks:
       - app-network
 
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - app-network
+        
 networks:
   app-network:
