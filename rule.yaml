@@ -19,3 +19,36 @@ groups:
           summary: "Sudden drop in item quantity for {{ $labels.product_name }}"
           description: "The quantity of item {{ $labels.product_name }} dropped significantly."
 
+  - name: api_latency_alerts
+    rules:
+      - alert: HighApiLatency
+        expr: histogram_quantile(0.95, sum(rate(request_latency_seconds_bucket[5m])) by (le, method, endpoint)) > 0.01
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High latency for API endpoint {{ $labels.endpoint }}"
+          description: "The 95th percentile latency for the API endpoint {{ $labels.endpoint }} has been above 10ms."
+
+  - name: api_error_rate_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: (sum(rate(error_count[5m])) / sum(rate(request_count[5m]))) > 0.0005
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate for API"
+          description: "The error rate for the API has exceeded 99.95% over the last 5 minutes."
+
+  # Grouped alerts to reduce noise from similar issues
+  - name: grouped_api_alerts
+    rules:
+      - alert: HighApiLatency
+        expr: histogram_quantile(0.95, sum(rate(request_latency_seconds_bucket[5m])) by (le, method, endpoint)) > 0.01
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High latency for API endpoint {{ $labels.endpoint }}"
+          description: "The 95th percentile latency for the API endpoint {{ $labels.endpoint }} has been above 10ms."

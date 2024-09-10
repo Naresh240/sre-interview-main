@@ -32,7 +32,7 @@ async def create_item(item: Item):
             raise HTTPException(status_code=400, detail="Item already exists")
         if item.quantity <= 0:
             raise HTTPException(status_code=400, detail="Quantity must be a positive number")
-
+        
         inventory[item.name] = item
         INVENTORY_ITEMS.set(len(inventory))
         PRODUCT_QUANTITY.labels(product_name=item.name).set(item.quantity)
@@ -55,17 +55,17 @@ async def update_item(item_name: str, item: Item):
     if item_name not in inventory:
         ERROR_COUNT.inc()
         raise HTTPException(status_code=404, detail="Item not found")
-
+    
     if item.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be a positive number")
 
     existing_item = inventory[item_name]
-    existing_item.quantity += item.quantity  # Add the new quantity to the existing quantity
+    existing_item.quantity = item.quantity  # Replace current quantity with the new one
     if item.price:
         existing_item.price = item.price
     if item.description:
         existing_item.description = item.description
-
+    
     PRODUCT_QUANTITY.labels(product_name=item_name).set(existing_item.quantity)
     return existing_item
 
@@ -75,7 +75,7 @@ async def delete_item(item_name: str):
     if item_name not in inventory:
         ERROR_COUNT.inc()
         raise HTTPException(status_code=404, detail="Item not found")
-
+    
     del inventory[item_name]
     INVENTORY_ITEMS.set(len(inventory))
     PRODUCT_QUANTITY.remove(item_name)  # Remove the label if item is deleted

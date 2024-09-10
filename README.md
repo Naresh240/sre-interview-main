@@ -60,8 +60,12 @@ docker-compose up -d
 2. Check Output using below urls:
 
 ```bash
-curl -X POST "http://54.166.15.182:8000/items/" -H "Content-Type: application/json" -d '{"name": "item1", "price": 10.0, "quantity": 5, "description": "A test item"}'
-curl -X GET "http://54.166.15.182:8000/items/item1"
+curl -X POST "http://localhost:8000/items/" -H "Content-Type: application/json" -d '{"name": "item1", "price": 10.0, "quantity": 5, "description": "A test item"}'
+curl -X GET "http://localhost:8000/items/item1"
+
+curl -X POST "http://localhost:8000/items/" -H "Content-Type: application/json" -d '{"name": "item2", "price": 10.0, "quantity": -5, "description": "A test item"}'
+
+curl -X PUT "http://localhost:8000/items/item1" -H "Content-Type: application/json" -d '{"name": "item_name", "quantity": 10.0, "price": 10, "description": "Updated description"}'
 
 ```
 
